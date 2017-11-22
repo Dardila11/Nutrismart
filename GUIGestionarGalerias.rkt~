@@ -1,0 +1,53 @@
+#lang racket
+(require racket/gui/base)
+
+(provide galerias-frame)
+(require "NuevaFruta.rkt")
+
+(define galerias-frame
+  (new frame%
+    [label "Gestionar Galerias - Nutrismart"]
+    [width 600]
+    [height 400]))
+
+;TODO 1. Construir todo (incluyendo los GUI para las frutas) el GUI para gestionar Galerias
+;     2. FECHA LIMITE MARTES 21 12:00
+
+
+(define panel1 (new vertical-panel%
+                    [min-width 100][min-height 10]
+                    [parent galerias-frame]))
+
+;(define choiceFrutas (new choice%
+ ;                         [label "Fruta que ingresa"]
+  ;                        [parent galerias-frame]))
+
+
+;Cajas de texto 
+
+(define txtNombreFruta (new text-field% [parent panel1][label "Fruta que ingresa"]))
+(define txtCantidadIngresa (new text-field% [parent panel1][label "Cantidad que ingresa (kg)"]))
+(define txtCantidadDesperdicia (new text-field% [parent panel1][label "Cantidad desperdiciada (kg)"]))
+
+(define panel2 (new horizontal-panel%
+                    [alignment '(center top)]
+                    [parent galerias-frame]))
+
+(define btnGuardar(new button%
+                        [parent panel2]
+                        [enabled #t]
+                        [label "GUARDAR"]
+                        ))
+
+(define btnAgregarFruta(new button%
+                        [parent panel2]
+                        [enabled #t]
+                        [label "AGREGAR NUEVA FRUTA"]
+                        [callback (lambda (button event)
+                                    (send nuevaFruta-frame show #t))]))
+
+
+(send galerias-frame show #t)
+
+
+

@@ -1,0 +1,23 @@
+#lang racket
+(require racket/gui/base)
+
+(define application-frame
+  (new frame%
+    [label "Nutrismart"]
+    [width 400]
+    [height 300]))
+
+(define tab-panel
+  (new tab-panel%
+    [parent application-frame]
+    [choices '("&Galerias" "&Comunas")]))
+
+(define msg
+  (new message%
+       [parent tab-panel "&Galerias"]
+       [label "este es un mensaje"]))
+
+(send application-frame show #t)
+
+
+

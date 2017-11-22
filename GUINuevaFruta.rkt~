@@ -1,0 +1,52 @@
+#lang racket
+(require racket/gui/base)
+
+(provide nuevaFruta-frame)
+
+(define nuevaFruta-frame
+  (new frame%
+    [label "Agregar Fruta - Nutrismart"]
+    [width 600]
+    [height 400]))
+
+(define panel1 (new vertical-panel%
+                    [alignment '(center center)]
+                    [parent nuevaFruta-frame]))
+
+(define txtFrutaIngresa (new text-field% [parent panel1][label "Fruta que ingresa"]))
+(define txtCantidadIngresa (new text-field% [parent panel1][label "Cantidad que ingresa (kg)"]))
+(define txtCantidadDesperdicia (new text-field% [parent panel1][label "Cantidad desperdiciada (kg)"]))
+(define btnAgregarFruta(new button%
+                        [parent panel1]
+                        [enabled #t]
+                        [label "AGREGAR FRUTA"]
+                        ))
+
+
+(define panel2 (new vertical-panel%
+                    [alignment '(center center)]
+                    [parent nuevaFruta-frame]
+                    [min-height 1]
+                    [min-width 200]))
+
+(define msg (new message% [parent panel2]
+                          [label "Componente Nutricional (mg)"]))
+
+(define panel3 (new horizontal-panel%
+                    [alignment '(center center)]
+                    [parent nuevaFruta-frame]))
+
+
+(define txtComponente (new text-field% [parent panel3][label "Componente (mg)"]))
+(define txtNutriente (new text-field% [parent panel3][label "Nutriente"]))
+(define btnAgregar(new button%
+                        [parent panel3]
+                        [enabled #t]
+                        [label "AGREGAR COMPONENTE"]
+                        ))
+
+
+;(send nuevaFruta-frame show #t)
+
+
+

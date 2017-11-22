@@ -1,0 +1,47 @@
+#lang racket
+(require racket/gui/base)
+(require db)
+
+
+;conexion a la bd
+
+
+;Ingreso a nutrismart
+
+#| Se conecta a la bd de MySQL
+   Necesita el email y contraseña para poder ingresar a la aplicacion |#
+
+(define application-frame
+  (new frame%
+    [label "Nutrismart"]
+    [width 400]
+    [height 300]))
+
+(define panel1 (new vertical-panel%
+                    [alignment '(center center)]
+                    [parent application-frame]))
+
+;Cajas de texto email y contraseña
+
+(define txtEmail (new text-field% [parent panel1][label "Email"]))
+(define txtPass (new text-field% [parent panel1] [label "Contraseña"]))
+
+(define msgEmail (new message% [parent panel1][label "email"][min-height 1][min-width 400]))
+(define msgPass (new message% [parent panel1][label "pass"][min-height 1][min-width 400]))
+
+
+;button ingresar obtiene datos de los textview
+(define btnIngresar(new button%
+                        [parent panel1]
+                        [label "Ingresar"]
+                        [callback (lambda (button event)
+                                    (send msgEmail set-label (send txtEmail get-value))
+                                    (send msgPass set-label (send txtPass get-value)))]))
+
+
+                                  
+               
+(send application-frame show #t)
+
+
+
