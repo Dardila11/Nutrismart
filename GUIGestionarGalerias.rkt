@@ -47,6 +47,8 @@
                     [alignment '(center top)]
                     [parent galerias-frame]))
 
+;TODO 1: AGREGAR MENSAJES DE GUARDADO
+
 (define btnGuardar(new button%
                         [parent panel2]
                         [enabled #t]
@@ -63,7 +65,7 @@
                                     (send nuevaFruta-frame show #t))]))
 
 
-;(send galerias-frame show #t)
+(send galerias-frame show #t)
 
 
 
