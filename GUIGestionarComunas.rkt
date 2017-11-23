@@ -55,6 +55,12 @@
                    ))
 (define txtPorcentaje (new text-field% [parent panel2][label "Porcentaje en Carencia (%)"]))
 (define txtPersonas (new text-field% [parent panel2][label "Cantidad de personas"]))
+(define comboPersonas (new combo-field%
+                   [choices (list "Niños" "Ancianos")]
+                   [label "Seleccione un tipo"]
+                   [init-value "Niños"]
+                   [parent panel2]
+                   ))
 
 (define panel3 (new horizontal-panel%
                     [alignment '(center top)]
@@ -66,7 +72,8 @@
                         [label "AGREGAR NUTRIENTE"]
                         [callback (lambda (button event)
                                     (obtieneDatosCarencias (send comboNutrientes get-value) 
-                                                             (send txtPersonas get-value) (send comboComunas get-value) (send txtPorcentaje get-value)))]))
+                                                             (send txtPersonas get-value) (send comboComunas get-value) (send txtPorcentaje get-value)
+                                                             (send comboPersonas get-value)))]))
 
 (define btnEstadisticas(new button%
                         [parent panel3]

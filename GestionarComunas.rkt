@@ -26,13 +26,13 @@
 
 
 ;insertamos las carencias con el nut_id, cantidadPersonas, com_id
-(define (obtieneDatosCarencias txtNombreNutriente txtCantPersonas comboComunas txtPorcentaje)
+(define (obtieneDatosCarencias txtNombreNutriente txtCantPersonas comboComunas txtPorcentaje comboPersonas)
     ;(format "~v" (query-value conn galeriaIdByName comboGaleria)))
-  (query-exec conn insertarCARENCIAS (query-value conn nutrienteIdByName txtNombreNutriente) txtCantPersonas (query-value conn comunaIdByName comboComunas) txtPorcentaje))
+  (query-exec conn insertarCARENCIAS (query-value conn nutrienteIdByName txtNombreNutriente) txtCantPersonas (query-value conn comunaIdByName comboComunas) txtPorcentaje comboPersonas))
 
 
 ;insertar datos en la tabla CARENCIAS
-(define insertarCARENCIAS (prepare conn "INSERT INTO CARENCIAS(nut_id,car_numpersonas,com_id,car_porcentaje) VALUES(?,?,?,?)"))
+(define insertarCARENCIAS (prepare conn "INSERT INTO CARENCIAS(nut_id,car_numpersonas,com_id,car_porcentaje,tipo_persona) VALUES(?,?,?,?,?)"))
 
 
 
