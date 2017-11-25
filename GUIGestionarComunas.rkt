@@ -20,14 +20,15 @@
                    [choices (list "Comuna1" "Comuna2" "Comuna3" "Comuna4")]
                    [label "Seleccione la Comuna asignada"]
                    [init-value "Comuna1"]
+                   (vert-margin 20)(horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel1]
                    ))
 
-(define txtPoblacionTotal (new text-field% [parent panel1][label "Población total"]))
-(define txtCantidadNinos (new text-field% [parent panel1][label "Cantidad de niños"]))
-(define txtCantidadNinosDesnu (new text-field% [parent panel1][label "Cantidad de niños con desnutrición"]))
-(define txtCantidadAncianos (new text-field% [parent panel1][label "Cantidad de ancianos"]))
-(define txtCantidadAncianosDesnu (new text-field% [parent panel1][label "Cantidad de ancianos con desnutrición"]))
+(define txtPoblacionTotal (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Población total"]))
+(define txtCantidadNinos (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de niños"]))
+(define txtCantidadNinosDesnu (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de niños con desnutrición"]))
+(define txtCantidadAncianos (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de ancianos"]))
+(define txtCantidadAncianosDesnu (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de ancianos con desnutrición"]))
 
 ;TODO 1: AGREGAR MENSAJES DE GUARDADO 
 (define btnAgregarComuna(new button%
@@ -40,25 +41,29 @@
                                                              (send txtCantidadAncianos get-value) (send txtCantidadAncianosDesnu get-value)))]))
 
 
-(define msg (new message% [parent panel1]
-                          [label "Componente Nutricional (mg)"]))
+
 
 (define panel2 (new vertical-panel%
-                    [alignment '(left top)]
+                    [alignment '(center top)]
                     [parent comunas-frame]))
+
+(define msg (new message% [parent panel2]
+                          [label "Componente Nutricional (mg)"]))
 
 (define comboNutrientes (new combo-field%
                    [choices (list "Potasio" "Calcio" "Magnesio")]
-                   [label "Seleccione un Nutriente"]
+                   [label "Seleccione un Nutriente     "]
                    [init-value "Potasio"]
+                   (horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel2]
                    ))
-(define txtPorcentaje (new text-field% [parent panel2][label "Porcentaje en Carencia (%)"]))
-(define txtPersonas (new text-field% [parent panel2][label "Cantidad de personas"]))
+(define txtPorcentaje (new text-field% [parent panel2](horiz-margin 50)[min-height 10][min-width 150][label "Porcentaje en Carencia (%)"]))
+(define txtPersonas (new text-field% [parent panel2](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de personas        "]))
 (define comboPersonas (new combo-field%
                    [choices (list "Niños" "Ancianos")]
-                   [label "Seleccione un tipo"]
+                   [label "Seleccione un tipo              "]
                    [init-value "Niños"]
+                   (horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel2]
                    ))
 

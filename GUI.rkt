@@ -27,8 +27,8 @@
 
 ;Cajas de texto email y contraseña
 
-(define txtEmail (new text-field% [parent panel1][label "Email"]))
-(define txtPass (new text-field% [parent panel1] [label "Contraseña"]))
+(define txtEmail (new text-field% [parent panel1](vert-margin 20)(horiz-margin 50)[min-height 10][min-width 150][label "Email"]))
+(define txtPass (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Pass"]))
 
 (define msgRes (new message% [parent panel1][label "Resultado"][min-height 1][min-width 400]))
 
@@ -55,7 +55,8 @@
                         [enabled #f]
                         [label "Comunas"]
                         [callback (lambda (button event)
-                                    (send comunas-frame show #t))]))
+                                    (send comunas-frame show #t))
+                                   ]))
 
 
 (define (consultaLogin conn email pass)

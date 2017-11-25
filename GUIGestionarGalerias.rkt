@@ -18,6 +18,7 @@
                    [choices (list "Bolivar" "Esmeralda")]
                    [label "Seleccione la galeria asignada"]
                    [init-value "Bolivar"]
+                   (vert-margin 20)(horiz-margin 50)[min-height 10][min-width 150]
                    [parent galerias-frame]
                    ))
 
@@ -30,14 +31,15 @@
                    [choices (list "Banano" "Papaya" "Manzana" "Naranja")]
                    [init-value "Banano"]
                    [label "Seleccione la fruta"]
+                   (horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel1]
                    ))
 
 
 ;Cajas de texto
 
-(define txtCantidadIngresa (new text-field% [parent panel1][label "Cantidad que ingresa (kg)"]))
-(define txtCantidadDesperdicia (new text-field% [parent panel1][label "Cantidad desperdiciada (kg)"]))
+(define txtCantidadIngresa (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad que ingresa (kg)"]))
+(define txtCantidadDesperdicia (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad desperdiciada (kg)"]))
 
 ;mensaje
 

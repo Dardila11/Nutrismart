@@ -15,7 +15,7 @@
                     [alignment '(center center)]
                     [parent nuevaFruta-frame]))
 
-(define txtFrutaIngresa (new text-field% [parent panel1][label "Fruta que ingresa"]))
+(define txtFrutaIngresa (new text-field% [parent panel1](vert-margin 20)(horiz-margin 50)[min-height 10][min-width 150][label "Fruta que ingresa"]))
 (define btnAgregarFruta(new button%
                         [parent panel1]
                         [enabled #t]
@@ -24,16 +24,18 @@
                                     (insertarNuevaFruta (send txtFrutaIngresa get-value)))]))
                         
 
-(define msg (new message% [parent panel1]
-                          [label "Componente Nutricional (mg)"]))
 
-(define panel3 (new horizontal-panel%
+
+(define panel3 (new vertical-panel%
                     [alignment '(center center)]
                     [parent panel1]))
 
+(define msg (new message% [parent panel3]
+                          [label "Componente Nutricional (mg)"]))
 
-(define txtAporte (new text-field% [parent panel3][label "Aporte (mg)"]))
-(define txtNutriente (new text-field% [parent panel3][label "Nutriente"]))
+
+(define txtAporte (new text-field% [parent panel3](horiz-margin 50)[min-height 10][min-width 150][label "Aporte (mg)"]))
+(define txtNutriente (new text-field% [parent panel3](horiz-margin 50)[min-height 10][min-width 150][label "Nutriente"]))
 (define btnAgregar(new button%
                         [parent panel3]
                         [enabled #t]
@@ -42,7 +44,7 @@
                                     (insertarNutriente (send txtNutriente get-value) (send txtAporte get-value) (send txtFrutaIngresa get-value)))]))
 
 
-;(send nuevaFruta-frame show #t)
+(send nuevaFruta-frame show #t)
 
 
 
