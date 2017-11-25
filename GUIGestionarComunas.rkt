@@ -60,9 +60,9 @@
 (define txtPorcentaje (new text-field% [parent panel2](horiz-margin 50)[min-height 10][min-width 150][label "Porcentaje en Carencia (%)"]))
 (define txtPersonas (new text-field% [parent panel2](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de personas        "]))
 (define comboPersonas (new combo-field%
-                   [choices (list "Niños" "Ancianos")]
+                   [choices (list "Niño" "Anciano")]
                    [label "Seleccione un tipo              "]
-                   [init-value "Niños"]
+                   [init-value "Niño"]
                    (horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel2]
                    ))

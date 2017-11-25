@@ -30,9 +30,9 @@ CREATE TABLE `CARENCIAS` (
   `car_numpersonas` int(11) DEFAULT NULL,
   `com_id` int(11) DEFAULT NULL,
   `car_porcentaje` int(11) DEFAULT NULL,
-  `tipo_persona` varchar(45) DEFAULT NULL,
+  `tipo_persona` int(11) DEFAULT NULL,
   PRIMARY KEY (`car_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,10 +41,6 @@ CREATE TABLE `CARENCIAS` (
 
 LOCK TABLES `CARENCIAS` WRITE;
 /*!40000 ALTER TABLE `CARENCIAS` DISABLE KEYS */;
-INSERT INTO `CARENCIAS` VALUES (1,1,150,1,12,NULL);
-INSERT INTO `CARENCIAS` VALUES (2,2,150,1,50,NULL);
-INSERT INTO `CARENCIAS` VALUES (3,1,120,1,30,'Niños');
-INSERT INTO `CARENCIAS` VALUES (4,1,30,3,30,'Niños');
 /*!40000 ALTER TABLE `CARENCIAS` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,10 +54,6 @@ DROP TABLE IF EXISTS `COMUNAS`;
 CREATE TABLE `COMUNAS` (
   `com_id` int(11) NOT NULL,
   `com_nombre` varchar(45) NOT NULL,
-  `com_cant_ninos` int(11) DEFAULT NULL,
-  `com_cant_ninosdes` int(11) DEFAULT NULL,
-  `com_cant_ancianos` int(11) DEFAULT NULL,
-  `com_cant_ancianosdes` int(11) DEFAULT NULL,
   PRIMARY KEY (`com_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -72,10 +64,10 @@ CREATE TABLE `COMUNAS` (
 
 LOCK TABLES `COMUNAS` WRITE;
 /*!40000 ALTER TABLE `COMUNAS` DISABLE KEYS */;
-INSERT INTO `COMUNAS` VALUES (1,'comuna1',NULL,NULL,NULL,NULL);
-INSERT INTO `COMUNAS` VALUES (2,'comuna2',NULL,NULL,NULL,NULL);
-INSERT INTO `COMUNAS` VALUES (3,'comuna3',NULL,NULL,NULL,NULL);
-INSERT INTO `COMUNAS` VALUES (4,'comuna4',NULL,NULL,NULL,NULL);
+INSERT INTO `COMUNAS` VALUES (1,'comuna1');
+INSERT INTO `COMUNAS` VALUES (2,'comuna2');
+INSERT INTO `COMUNAS` VALUES (3,'comuna3');
+INSERT INTO `COMUNAS` VALUES (4,'comuna4');
 /*!40000 ALTER TABLE `COMUNAS` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,9 +198,6 @@ DROP TABLE IF EXISTS `GALERIAS`;
 CREATE TABLE `GALERIAS` (
   `gal_id` int(11) NOT NULL AUTO_INCREMENT,
   `gal_nombre` varchar(45) NOT NULL,
-  `fru_id` int(11) DEFAULT NULL,
-  `gal_ingresa` int(11) DEFAULT NULL,
-  `gal_desperdicia` int(11) DEFAULT NULL,
   PRIMARY KEY (`gal_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -219,8 +208,8 @@ CREATE TABLE `GALERIAS` (
 
 LOCK TABLES `GALERIAS` WRITE;
 /*!40000 ALTER TABLE `GALERIAS` DISABLE KEYS */;
-INSERT INTO `GALERIAS` VALUES (1,'Bolivar',1,200,80);
-INSERT INTO `GALERIAS` VALUES (2,'Esmeralda',NULL,NULL,NULL);
+INSERT INTO `GALERIAS` VALUES (1,'Bolivar');
+INSERT INTO `GALERIAS` VALUES (2,'Esmeralda');
 /*!40000 ALTER TABLE `GALERIAS` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -251,6 +240,62 @@ INSERT INTO `NUTRIENTES` VALUES (3,'magnesio');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `PERSONAS`
+--
+
+DROP TABLE IF EXISTS `PERSONAS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PERSONAS` (
+  `per_id` int(11) NOT NULL AUTO_INCREMENT,
+  `per_tipo` varchar(45) NOT NULL,
+  PRIMARY KEY (`per_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PERSONAS`
+--
+
+LOCK TABLES `PERSONAS` WRITE;
+/*!40000 ALTER TABLE `PERSONAS` DISABLE KEYS */;
+INSERT INTO `PERSONAS` VALUES (1,'niño');
+INSERT INTO `PERSONAS` VALUES (2,'anciano');
+/*!40000 ALTER TABLE `PERSONAS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `REFERENCIAS`
+--
+
+DROP TABLE IF EXISTS `REFERENCIAS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `REFERENCIAS` (
+  `ref_id` int(11) NOT NULL AUTO_INCREMENT,
+  `per_id` int(11) DEFAULT NULL,
+  `nut_id` int(11) DEFAULT NULL,
+  `ref_referencia` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`ref_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `REFERENCIAS`
+--
+
+LOCK TABLES `REFERENCIAS` WRITE;
+/*!40000 ALTER TABLE `REFERENCIAS` DISABLE KEYS */;
+INSERT INTO `REFERENCIAS` VALUES (1,1,1,3800.00);
+INSERT INTO `REFERENCIAS` VALUES (2,2,1,4700.00);
+INSERT INTO `REFERENCIAS` VALUES (3,1,2,800.00);
+INSERT INTO `REFERENCIAS` VALUES (4,2,2,1200.00);
+INSERT INTO `REFERENCIAS` VALUES (5,1,3,130.00);
+INSERT INTO `REFERENCIAS` VALUES (6,2,3,350.00);
+/*!40000 ALTER TABLE `REFERENCIAS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `USERS`
 --
 
@@ -277,11 +322,7 @@ LOCK TABLES `USERS` WRITE;
 /*!40000 ALTER TABLE `USERS` DISABLE KEYS */;
 INSERT INTO `USERS` VALUES (1,'Daniel','dan@hotmail.com','dan12345','Activo',1,1);
 INSERT INTO `USERS` VALUES (2,'grace','grace@hotmail.com','grace12345','Activo',1,1);
-INSERT INTO `USERS` VALUES (3,'enrique','enrique@hotmail.com','12345','Inactivo',NULL,NULL);
 INSERT INTO `USERS` VALUES (4,'Alejandro','alejandro@hotmail.com','alejandro12345','Activo',4,6);
-INSERT INTO `USERS` VALUES (5,'anderson','ander@hotmail.com','12345','Activo',4,5);
-INSERT INTO `USERS` VALUES (6,'fvfv','gbrgb','rgbrg','Inactivo',NULL,NULL);
-INSERT INTO `USERS` VALUES (7,'andres','andres@hotmail.com','12345','Activo',3,7);
 /*!40000 ALTER TABLE `USERS` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -294,4 +335,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-25  0:33:18
+-- Dump completed on 2017-11-25 14:46:52
