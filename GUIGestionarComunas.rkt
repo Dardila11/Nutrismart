@@ -50,6 +50,9 @@
 (define msg (new message% [parent panel2]
                           [label "Componente Nutricional (mg)"]))
 
+(define msgRes (new message% [parent panel2]
+                          [label "Resultado"]))
+
 (define comboNutrientes (new combo-field%
                    [choices (list "Potasio" "Calcio" "Magnesio")]
                    [label "Seleccione un Nutriente     "]
@@ -74,7 +77,7 @@
 (define btnAgregarNutriente(new button%
                         [parent panel3]
                         [enabled #t]
-                        [label "AGREGAR NUTRIENTE"]
+                        [label "AGREGAR CARENCIA"]
                         [callback (lambda (button event)
                                     (obtieneDatosCarencias (send comboNutrientes get-value) 
                                                              (send txtPersonas get-value) (send comboComunas get-value) (send txtPorcentaje get-value)
@@ -83,8 +86,10 @@
 (define btnEstadisticas(new button%
                         [parent panel3]
                         [enabled #t]
-                        [label "GENERAR ESTADISTICAS"]
+                        [label "GENERAR RECOMENDACIONES"]
+                        
                         ))
+                        
 
 
 (send comunas-frame show #t)

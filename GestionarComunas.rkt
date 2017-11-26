@@ -38,4 +38,50 @@
 
 
 
+;-------------------------------------- OBTENCION DE DATOS -----------------------------------------------------------------------------------------
+
+;al precionar el botton GENERAR RECOMENDACIONES:
+;Se obtiene todas las carencias de la la comuna actual
+
+(define carenciasComunaSQL (prepare conn "SELECT * FROM CARENCIAS
+                                       WHERE com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = ?)"))
+
+(define (carenciasComuna comboComunas)
+  (query-rows conn carenciasComunaSQL "comuna1"))
+
+(carenciasComuna "comuna1")
+
+(length (carenciasComuna "comuna1"))
+(car (carenciasComuna "comuna1"))
+
+;se obtiene el valor de las carencias de la comuna actual
+
+(define valorCarenciasComunaSQL (prepare conn "SELECT (((car.car_porcentaje * ref.ref_referencia) / 100)  * car.car_numpersonas) as Total, 
+                                               (SELECT nut_nombre FROM NUTRIENTES WHERE nut_id =  car.nut_id ) as Nutriente
+                                               FROM CARENCIAS as car 
+                                               INNER JOIN REFERENCIAS as ref on ref.per_id = car.tipo_persona and ref.nut_id = car.nut_id
+                                               WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'niño') 
+			                       and car.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = ?);"))
+
+(define (valorCarenciasComunas comboComunas)
+  (query-rows conn valorCarenciasComunaSQL comboComunas))
+
+(valorCarenciasComunas "comuna1")
+(car (valorCarenciasComunas "comuna1"))
+(list (car (valorCarenciasComunas "comuna1")))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
