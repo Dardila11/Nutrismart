@@ -97,16 +97,24 @@ WHERE car.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'potasio');
 -- Se obtiene todas las carencias de la la comuna actual
 SELECT *
 FROM CARENCIAS
-WHERE com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna1')
+WHERE com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna1');
 
 -- Se obtiene el valor de las carencias de la comuna actual para los niños
 
-SELECT (((car.car_porcentaje * ref.ref_referencia) / 100)  * car.car_numpersonas) as Total, 
+SELECT (((car.car_porcentaje * ref.ref_referencia) / 100)  * car.car_numpersonas) as Total,
 (SELECT nut_nombre FROM NUTRIENTES WHERE nut_id =  car.nut_id ) as Nutriente
 FROM CARENCIAS as car 
 INNER JOIN REFERENCIAS as ref on ref.per_id = car.tipo_persona and ref.nut_id = car.nut_id
-WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'niño') 
+WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'anciano') 
 			 and car.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna1');
+             
+-- Se obtiene los nombre de los nutrientes en carencia
+SELECT (SELECT nut_nombre FROM NUTRIENTES WHERE nut_id =  car.nut_id )
+FROM CARENCIAS as car 
+INNER JOIN REFERENCIAS as ref on ref.per_id = car.tipo_persona and ref.nut_id = car.nut_id
+WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'anciano') 
+			 and car.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna1');
+
              
 -- Se obtiene el valor de las carencias de la comuna actual para los ancianos
 
@@ -116,6 +124,56 @@ FROM CARENCIAS as car
 INNER JOIN REFERENCIAS as ref on ref.per_id = car.tipo_persona and ref.nut_id = car.nut_id
 WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'anciano') 
 			 and car.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna1');
+
+
+-- Obtiene las frutas con sus nutrientes y lo que aporta cada uno
+
+SELECT fru.fru_nombre, nut.nut_nombre ,dat.nut_aporte
+FROM FRUTAS as fru
+INNER JOIN  DATOSNUT as dat on dat.fru_id = fru.fru_id
+INNER JOIN  NUTRIENTES as nut on nut.nut_id = dat.nut_id;
+
+-- Obtiene las frutas que se encuentran en la galeria 2
+
+SELECT  fru.fru_nombre
+FROM DATOSGAL as datg INNER JOIN FRUTAS fru
+ON datg.fru_id = fru.fru_id
+WHERE datg.gal_id = 2;
+
+-- Obtiene los nutrientes de las frutas de la galeria 2
+SELECT nut.nut_nombre
+FROM DATOSNUT as datn
+INNER JOIN NUTRIENTES as nut  ON datn.nut_id = nut.nut_id
+INNER JOIN FRUTAS as fru ON datn.fru_id = fru.fru_id
+INNER JOIN DATOSGAL as datg on datg.fru_id = fru.fru_id
+WHERE datg.gal_id = 2;
+
+-- Obtiene los nutrientes de una fruta
+SELECT nut.nut_nombre
+FROM DATOSNUT as datn
+INNER JOIN NUTRIENTES as nut ON datn.nut_id = nut.nut_id
+WHERE datn.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'manzana');
+
+-- Obtiene aporte de la naranja con el nutriente magnesio
+SELECT datn.nut_aporte
+FROM DATOSNUT as datn
+INNER JOIN FRUTAS as fru ON datn.fru_id = fru.fru_id
+WHERE fru.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'naranja') 
+and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'magnesio');
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
 
 
 

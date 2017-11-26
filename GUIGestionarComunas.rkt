@@ -54,7 +54,7 @@
                           [label "Resultado"]))
 
 (define comboNutrientes (new combo-field%
-                   [choices (list "Potasio" "Calcio" "Magnesio")]
+                   [choices (list "Potasio" "vitaminaC" "Magnesio")]
                    [label "Seleccione un Nutriente     "]
                    [init-value "Potasio"]
                    (horiz-margin 50)[min-height 10][min-width 150]
