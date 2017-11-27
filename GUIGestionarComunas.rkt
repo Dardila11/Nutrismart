@@ -83,12 +83,6 @@
                                                              (send txtPersonas get-value) (send comboComunas get-value) (send txtPorcentaje get-value)
                                                              (send comboPersonas get-value)))]))
 
-(define btnEstadisticas(new button%
-                        [parent panel3]
-                        [enabled #t]
-                        [label "GENERAR RECOMENDACIONES"]
-                        
-                        ))
                         
 
 

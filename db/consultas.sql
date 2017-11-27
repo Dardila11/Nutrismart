@@ -158,8 +158,8 @@ WHERE datn.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'manzana');
 SELECT datn.nut_aporte
 FROM DATOSNUT as datn
 INNER JOIN FRUTAS as fru ON datn.fru_id = fru.fru_id
-WHERE fru.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'naranja') 
-and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'magnesio');
+WHERE fru.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano') 
+and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'potasio');
 
 
 

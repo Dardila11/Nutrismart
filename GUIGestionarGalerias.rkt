@@ -38,8 +38,8 @@
 
 ;Cajas de texto
 
-(define txtCantidadIngresa (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad que ingresa (kg)"]))
-(define txtCantidadDesperdicia (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad desperdiciada (kg)"]))
+(define txtCantidadIngresa (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad que ingresa (g)"]))
+(define txtCantidadDesperdicia (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad desperdiciada (g)"]))
 
 ;mensaje
 
