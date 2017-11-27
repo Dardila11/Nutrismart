@@ -1,6 +1,8 @@
 #lang racket
 (require racket/gui/base)
 (require "Recomendaciones.rkt")
+(require db)
+(require "Conexion.rkt")
 
 (define recomendaciones-frame
   (new frame%
@@ -44,11 +46,9 @@
                           [label "Resultado"]))
 
 
-
-
-
-
-
 (send recomendaciones-frame show #t)
+
+
+;============================================== LOGICA ===================================================
 
 

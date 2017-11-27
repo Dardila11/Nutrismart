@@ -6,8 +6,9 @@
 
 ;-------------------------------------- OBTENCION DE DATOS -----------------------------------------------------------------------------------------
 
-;al precionar el botton GENERAR RECOMENDACIONES:
+;al precionar el boton GENERAR RECOMENDACIONES:
 ;Se obtiene todas las carencias de la la comuna actual
+
 
 (define carenciasComunaSQL (prepare conn "SELECT * FROM CARENCIAS
                                        WHERE com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = ?)"))
@@ -80,13 +81,14 @@
 (define carenciaList (nombreCarenciaComunas "niño" "comuna1"))
 (define frutas   (frutasEnGaleria "1"))
 
-cantidad
-carencia
+
+;cantidad
+;carencia
 ;(car carencia)
-frutas
+;frutas
 ;(car frutas)
 ;(car (cdr frutas))
-(nutrienteByFruta (car frutas))
+;(nutrienteByFruta (car frutas))
 ;(nutrienteByFruta "banano")
 ;(nutrienteByFruta (car frutas))
 ;(nutrienteByFruta (car (nutrienteByFruta (car (cdr frutas)))))
@@ -104,24 +106,21 @@ frutas
     [else (nutrienteNecesario (cdr carencia) nutriente)]
     ))
 
-(nutrienteNecesario carencia nutrienteObtenido)
+;(nutrienteNecesario carencia nutrienteObtenido)
 
-;obtiene la posicion del nutriente en la lista carencia
-(define posicionNut (index-of carencia "vitaminaC"))
-;obtiene el elemento en la posicion dada
-(define elementoPos (list-ref cantidad posicionNut))
-elementoPos
+
 
 ;ahora tenemos que buscar cuantos gramos entran de la fruta a la galeria
 
 (define gramosFrutaSQL (prepare conn "SELECT datg.dat_ingresa
                                       FROM DATOSGAL as datg
-                                      WHERE datg.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = ?);"))
+                                      WHERE datg.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = ?)
+                                      and datg.gal_id = (SELECT gal_id FROM GALERIAS WHERE gal_nombre = ?);"))
 
-(define (gramosFruta fruta )
-  (query-value conn gramosFrutaSQL fruta))
+(define (gramosFruta fruta galeria )
+  (query-value conn gramosFrutaSQL fruta galeria))
 
-(gramosFruta "manzana")
+;(gramosFruta "manzana")
 
 (define refByPersonaNutSQL (prepare conn "SELECT ref.ref_referencia
                                       FROM REFERENCIAS ref
@@ -134,4 +133,141 @@ elementoPos
 ;(refByPersonaNut "niño" "vitaminaC")
 
 ;calcular si la cantidad que entra de la fruta a la galeria es mayor a la carencia en gramos de la comuna
+
+(define (recomendacionNino comboGaleria comboComuna)
+    (valorCarenciasComunas "niño" comboComuna)
+    
+    )
+
+(define (recomendacionAnciano comboGaleria comboComuna)
+    (valorCarenciasComunas "anciano" comboComuna)
+    
+    )
+
+;(recomendacionNino "Bolivar" "comuna1")
+;(nombreCarenciaComunas "niño" "comuna1")
+;(recomendacionAnciano "Esmeralda" "comuna1")
+
+
+
+
+;================================================================================================================================================================
+
+
+;sacamos los nombre de las carencias por tipo persona
+
+(nombreCarenciaComunas "niño" "comuna1") ;-- LISTANUTRIENTES
+
+;sacamos el valor de las carencias por tipo persona
+
+(valorCarenciasComunas "niño" "comuna1")
+
+;================================================================================================================================================================
+
+;sacamos la lista de frutas de la galeria seleccionada
+
+(define frutasEnGaleriaByNameSQL (prepare conn "SELECT  fru.fru_nombre
+                                          FROM DATOSGAL as datg INNER JOIN FRUTAS fru
+                                          ON datg.fru_id = fru.fru_id
+                                          WHERE datg.gal_id = (SELECT gal_id FROM GALERIAS WHERE gal_nombre = ?);"))
+
+(define (frutasEnGaleriaByName nombreGaleria)
+  (query-list conn frutasEnGaleriaByNameSQL nombreGaleria))
+
+(frutasEnGaleriaByName "Bolivar") ;-- LISTAFRUTAS
+
+;================================================================================================================================================================
+
+;sacamos primer elemento de las frutas
+
+(car (frutasEnGaleriaByName "Bolivar")) ;-- primera fruta en LISTAFRUTAS
+
+;sacamos los nutriente de cada fruta de la lista de frutas por Galeria
+
+(nutrienteByFruta (car (frutasEnGaleriaByName "Bolivar"))) ;-- Lista de nutrientes de la primer fruta en FRUTAS
+
+(define listaNutrientesByFruta  (nutrienteByFruta (car (frutasEnGaleriaByName "Bolivar"))))
+
+;obtenemos el primer elemento de la lista de nutrientes de la primera fruta en FRUTAS
+
+(car listaNutrientesByFruta) ;-- primer elemento de la lista de nutrientes
+
+
+
+;================================================================================================================================================================
+
+(gramosFruta "manzana" "bolivar")
+(aporteByFrutayNutriente "manzana" "vitaminaC")
+
+;-- posicion de un elemento en una lista
+
+(define (posicionElem lista elemento)
+  (index-of lista elemento))
+
+;- elemento por su posicion
+(define (elemByPos lista posicion)
+  (list-ref lista posicion))
+
+(define (conversionGramos mg)
+  (/ mg 1000))
+
+(define (pos elemento)
+  (elemByPos (valorCarenciasComunas "niño" "comuna1") (posicionElem (nombreCarenciaComunas "niño" "comuna1") elemento)))
+
+(define (aporte fruta nutriente)
+  ;aporteByFrutayNutriente devuelve el aporte de la manzana en este caso que es 141 mg
+  ;falta obtener la cantidad de gramos que hay disponible en la galera
+  ;((equal? (aporteByFrutayNutriente fruta nutriente)(aporteByFrutayNutriente fruta nutriente)) (gramosFruta fruta "bolivar")))
+   (cond
+   [(<= (/ (* (gramosFruta fruta "bolivar") (aporteByFrutayNutriente fruta nutriente)) 100) (pos nutriente)) "no es suficiente"]
+   [else "justo lo que necesitamos"]))
+  
+ 
+
+
+(define (compararNutriente listaFrutas listaNutrientes existen)
+  (cond
+    [(empty? listaNutrientes) "no existe el nutriente en la listaNutrientes: evaluar la siguiente fruta"]
+    ;sacamos el nutriente de la cabeza de la listaFrutas y el nutriente de la cabeza de la listaNutrientes
+    [(equal? (car listaNutrientes) (car (nutrienteByFruta (car listaFrutas)))) (aporte (car listaFrutas) (car (nutrienteByFruta (car listaFrutas))))]
+    ;(append existen (list (car listaFrutas) (car (nutrienteByFruta (car listaFrutas)))))]
+   
+    [else (compararNutriente listaFrutas (cdr listaNutrientes) existen)]
+    ;comparar el mismo nutriente de la cabeza de la listaFrutas con el nutriente de la cabeza del resto de la lista
+    ))
+
+(compararNutriente (frutasEnGaleriaByName "bolivar") (nombreCarenciaComunas "niño" "comuna1") '())
+
+
+
+
+
+
+    
+  
+
+;================================================================================================================================================================
+
+
+;recorremos la lista de carencias por cada una de las frutas de la galeria
+
+(define (nutNecesario carencia nutriente)
+  (cond
+    ;[(empty? carencia) "nutriente no existe : evalua la siquiente fruta"]
+    [(empty? carencia) (nutNecesario (valorCarenciasComunas "niño" "comuna1") (car (nutrienteByFruta (car (cdr (frutasEnGaleriaByName "Esmeralda"))))))]
+    [(equal? nutriente (car carencia)) (aporteByFrutayNutriente (car (frutasEnGaleriaByName "Esmeralda")) nutriente)]
+    [else (nutNecesario (cdr carencia) nutriente)]
+    ))
+
+;(nutNecesario  (nombreCarenciaComunas "niño" "comuna1") (car (nutrienteByFruta (car (frutasEnGaleriaByName "Esmeralda")))))
+
+
+
+;================================================================================================================================================================
+
+
+
+
+
+
 

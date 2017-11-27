@@ -161,6 +161,22 @@ INNER JOIN FRUTAS as fru ON datn.fru_id = fru.fru_id
 WHERE fru.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano') 
 and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'potasio');
 
+-- obtiene los gramos que ingresan de una fruta especifica
+
+SELECT datg.dat_ingresa
+FROM DATOSGAL as datg
+WHERE datg.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano');
+
+-- obtiene la referencia para un tipo de persona y un nutriente
+
+SELECT ref.ref_referencia
+FROM REFERENCIAS ref
+WHERE ref.per_id = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'niño')
+and ref.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'potasio');
+
+
+
+
 
 
 
