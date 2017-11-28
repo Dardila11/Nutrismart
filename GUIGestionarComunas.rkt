@@ -24,24 +24,6 @@
                    [parent panel1]
                    ))
 
-(define txtPoblacionTotal (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Población total"]))
-(define txtCantidadNinos (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de niños"]))
-(define txtCantidadNinosDesnu (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de niños con desnutrición"]))
-(define txtCantidadAncianos (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de ancianos"]))
-(define txtCantidadAncianosDesnu (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de ancianos con desnutrición"]))
-
-;TODO 1: AGREGAR MENSAJES DE GUARDADO 
-(define btnAgregarComuna(new button%
-                        [parent panel1]
-                        [enabled #t]
-                        [label "AGREGAR COMUNA"]
-                        [callback (lambda (button event)
-                                    (obtieneDatosComuna (send comboComunas get-value) (send txtPoblacionTotal get-value)
-                                                             (send txtCantidadNinos get-value) (send txtCantidadNinosDesnu get-value)
-                                                             (send txtCantidadAncianos get-value) (send txtCantidadAncianosDesnu get-value)))]))
-
-
-
 
 (define panel2 (new vertical-panel%
                     [alignment '(center top)]
