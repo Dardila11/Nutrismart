@@ -172,8 +172,8 @@
 (define (conversionGramos mg)
   (/ mg 1000))
 
-(define (pos elemento)
-  (elemByPos (valorCarenciasComunas "niño" "comuna1") (posicionElem (nombreCarenciaComunas "niño" "comuna1") elemento)))
+(define (pos elemento comboComuna)
+  (elemByPos (valorCarenciasComunas "niño" comboComuna) (posicionElem (nombreCarenciaComunas "niño" comboComuna) elemento)))
 
 (define (mostrar fruta nutriente)
   (list fruta nutriente))
@@ -184,71 +184,41 @@
 ;- cuando hayamos encontrado un nutriente en carencia con el nutriente ofrecido por las galerias. llamamos este metodo
 ;el cual devuelve falso o verdadero si hay suficiendo cantidad de frutas para proveer.
 
-(define (aporte fruta nutriente)
+(define (aporte fruta nutriente comboComuna comboGaleria)
    (cond
-   [(eqv? (gramosFruta fruta "bolivar") #f) "fruta no existe en la galeria"]
-   [(<= (/ (* (gramosFruta fruta "bolivar") (aporteByFrutayNutriente fruta nutriente)) 100) (pos nutriente)) #f] ;-- no es suficiente
+   [(eqv? (gramosFruta fruta comboGaleria ) #f) "fruta no existe en la galeria"]
+   [(>= (/ (* (gramosFruta fruta comboGaleria) (aporteByFrutayNutriente fruta nutriente)) 100) (pos nutriente comboComuna)) #t] ;-- no es suficiente
    ;si es positivo, agregamos la fruta y nutriente a una lista
    ;hace algo para que muestre la fruta y el nutriente y cuanto ofrece
    ;[else (append listaDefinitiva (list fruta nutriente))]))
-   [(mostrar fruta nutriente)]
-   [else #t]))
-
-;================================================================================================================================================================
-
-  
- 
-
-
-(define (compararNutriente listaFrutas listaNutrientes)
-  (cond
-    [(empty? listaNutrientes) "no existe el nutriente en la listaNutrientes: evaluar la siguiente fruta"]
-    ;sacamos el nutriente de la cabeza de la listaFrutas y el nutriente de la cabeza de la listaNutrientes
-    [(equal? (car listaNutrientes) (car (nutrienteByFruta (car listaFrutas))))
-     (cond
-       [(eqv? (aporte (car listaFrutas) (car (nutrienteByFruta (car listaFrutas)))) #f) "no es suficiente lo que aporta"] ; no es suficiente lo que ofrece la galeria a la comuna
-       ;ahora pasamos al otro elemento en la lista 
-       [else
-        (cond
-          [(eqv? (cdr (nutrienteByFruta (car listaFrutas))) '()) (compararNutriente (cdr listaFrutas) listaNutrientes)] ; (nombreCarenciaComunas "niño" "comuna1")
-          [else (compararNutriente (cdr listaFrutas) (listaNutrientes))])])]
-    [else (compararNutriente listaFrutas (cdr listaNutrientes))]))
-    ;comparar el mismo nutriente de la cabeza de la listaFrutas con el nutriente de la cabeza del resto de la lista
-  
-
-;(compararNutriente (frutasEnGaleriaByName "bolivar") (nombreCarenciaComunas "niño" "comuna1"))
-
-;================================================================================================================================================================
-
-
-
+   [else #f]))
 
 ;================================================================================================================================================================
 
 ;compara UN SOLO nutriente de la LISTA DE NUTRIENTES de UNA SOLA fruta de la lista FRUTAS con la lista de CARENCIAS
 
-(define (compNutNut nutrienteFruta listaNutrientes fruta)
+(define (compNutNut nutrienteFruta listaNutrientes fruta comboComuna comboGaleria)
   (cond
     [(empty? listaNutrientes) #f]
     [(equal? nutrienteFruta (car listaNutrientes))
      ; "se ha encontrado"
      (cond
-       [(eqv? (aporte fruta nutrienteFruta) #t) #t]
-       [else (compNutNut nutrienteFruta (cdr listaNutrientes) fruta)]; "no es suficiente aporte de la fruta a la carencia"
+       [(eqv? (aporte fruta nutrienteFruta comboComuna comboGaleria) #t) #t]
+       [else (compNutNut nutrienteFruta (cdr listaNutrientes) fruta comboComuna comboGaleria)]; "no es suficiente aporte de la fruta a la carencia"
        ;si es #t se agrega la fruta y su componente a una lista
        )]
-    [else (compNutNut nutrienteFruta (cdr listaNutrientes) fruta)]
+    [else (compNutNut nutrienteFruta (cdr listaNutrientes) fruta comboComuna comboGaleria)]
   ))
 
 ;================================================================================================================================================================
 
 ;compara los nutrientes de UNA SOLA fruta de la lista FRUTAS con la lista de CARENCIAS
 
-(define (compFrutaNutriente nutrientesFruta listaNutrientes fruta)
+(define (compFrutaNutriente nutrientesFruta listaNutrientes fruta comboComuna comboGaleria)
   (cond
     [(empty? listaNutrientes) #f]
-    [(equal? nutrientesFruta '()) "no sirve" ]
-    [(equal? (compNutNut (car nutrientesFruta) listaNutrientes fruta) #f) (compFrutaNutriente (cdr nutrientesFruta) listaNutrientes fruta) #t ] ;no está el nutriente
+    [(equal? nutrientesFruta '()) #f ]
+    [(equal? (compNutNut (car nutrientesFruta) listaNutrientes fruta comboComuna comboGaleria) #f) (compFrutaNutriente (cdr nutrientesFruta) listaNutrientes fruta comboComuna comboGaleria) #t ] ;no está el nutriente
     ;[else (compFrutaNutriente (cdr nutrientesFruta listaNutrientes fruta))]
     ))
 
@@ -256,10 +226,10 @@
 
 ;compara UNA SOLA fruta de la lista FRUTAS con la lista Carencias
 
-(define (compFruta fruta listaNutrientes)
+(define (compFruta fruta listaNutrientes comboComuna comboGaleria)
   (cond
     [(empty? listaNutrientes) #f]
-    [(equal? (compFrutaNutriente (nutrienteByFruta fruta) listaNutrientes fruta) #t) #t] ; hay unafruta correcta
+    [(equal? (compFrutaNutriente (nutrienteByFruta fruta) listaNutrientes fruta comboComuna comboGaleria) #t) #t] ; hay unafruta correcta
     [else #f]))
 
 
@@ -268,16 +238,17 @@
 ;(compFruta "naranja" (nombreCarenciaComunas "niño" "comuna1"))
 ;================================================================================================================================================================
 ;compara una lista de frutas con la lista de nutrientes
-(define (compListaFrutaNut listaFruta listaNutrientes)
+(define (compListaFrutaNut listaFruta listaNutrientes comboComuna comboGaleria)
   (cond
-    [(empty? listaNutrientes) "no hay frutas en esta galeria que le sirvan a la comuna"]
-    [(equal? (compFruta (car listaFruta) listaNutrientes) #t) "se encontró por lo menos una fruta que sirva"]
-    [else (compListaFrutaNut (cdr listaFruta) listaNutrientes)]))
+    [(empty? listaFruta) "ListaFrutas vacia: esta galeria no tiene frutas para aportar a la comuna"]
+    [(empty? listaNutrientes) "ListaNutrientes vacia: no hay frutas que tengan los nutrientes en esta galeria que aporten a la comuna"]
+    [(equal? (compFruta (car listaFruta) listaNutrientes comboComuna comboGaleria) #t) "se encontró por lo menos una fruta que sirva"]
+    [else (compListaFrutaNut (cdr listaFruta) listaNutrientes comboComuna comboGaleria)]))
 
 ;sacamos la lista de valores de carencias de la comuna seleccionada
 ;la lista de frutas que hay en la galeria
 (define (carencias tipoPersona comboComuna comboGaleria)  
-      (compListaFrutaNut (frutasEnGaleriaByName comboGaleria) (nombreCarenciaComunas tipoPersona comboComuna)))
+      (compListaFrutaNut (frutasEnGaleriaByName comboGaleria) (nombreCarenciaComunas tipoPersona comboComuna) comboComuna comboGaleria))
 
 
 ;================================================================================================================================================================
@@ -289,15 +260,11 @@
     [(equal? (datosGaleria comboGaleria) 0) "la comuna no tiene datos"]
     ;si la comuna si tiene datos
     ;obtenemos la carencias de esa comuna
-    [(carencias tipoPersona comboComuna comboGaleria)]
-    
-    
-    
-    
+    [(carencias tipoPersona comboComuna comboGaleria)]   
   ))
 
 
-(resultadoRecomendaciones "niño" "comuna1" "bolivar")
+(resultadoRecomendaciones "niño" "comuna1" "esmeralda")
 
 
   
