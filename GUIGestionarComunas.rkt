@@ -1,6 +1,7 @@
 #lang racket
 (require racket/gui/base)
 (require "GestionarComunas.rkt")
+(require "GUIRecomendaciones.rkt")
 
 (provide comunas-frame)
 
@@ -64,6 +65,15 @@
                                     (obtieneDatosCarencias (send comboNutrientes get-value) 
                                                              (send txtPersonas get-value) (send comboComunas get-value) (send txtPorcentaje get-value)
                                                              (send comboPersonas get-value)))]))
+
+(define btnEstadisticas(new button%   
+                        [parent panel3]
+                        [enabled #t]
+                        [label "RECOMENDACIONES"]
+                        [callback (lambda (button event)
+                                    (send recomendaciones-frame show #t))])
+                        
+                        )
 
                         
 

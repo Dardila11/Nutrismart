@@ -3,6 +3,7 @@
 (require "Recomendaciones.rkt")
 (require db)
 (require "Conexion.rkt")
+(provide recomendaciones-frame)
 
 (define recomendaciones-frame
   (new frame%
@@ -17,16 +18,16 @@
 
 
 (define comboComunas (new combo-field%
-                   [choices (list "Comuna1" "Comuna2" "Comuna3" "Comuna4")]
+                   [choices (list "comuna1" "comuna2" "comuna3" "comuna4")]
                    [label "Comunas"]
-                   [init-value "Comuna1"]
+                   [init-value "comuna1"]
                    (horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel1]
                    ))
 (define comboGalerias (new combo-field%
-                   [choices (list "Bolivar" "Esmeralda")]
+                   [choices (list "bolivar" "esmeralda")]
                    [label "Galerias"]
-                   [init-value "Bolivar"]
+                   [init-value "bolivar"]
                    (horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel1]
                    ))
@@ -40,11 +41,12 @@
                         [enabled #t]
                         [label "GENERAR RECOMENDACIONES"]
                         [callback (lambda (button event)
-                                    (resultado (send comboComunas get-value) (send comboGalerias get-value)))])
-                        
-                        )
+                                    (resultadoRecomendaciones "niño" (send comboComunas get-value) 
+                                                             (send comboGalerias get-value)))]))
+                       
 
 (define msgRes (new message% [parent panel2]
+                          [min-height 1][min-width 200]
                           [label "Resultado"]))
 
 
