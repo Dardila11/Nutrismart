@@ -186,8 +186,8 @@
 
 (define (aporte fruta nutriente comboComuna comboGaleria)
    (cond
-   [(eqv? (gramosFruta fruta comboGaleria ) #f) "fruta no existe en la galeria"]
-   [(>= (/ (* (gramosFruta fruta comboGaleria) (aporteByFrutayNutriente fruta nutriente)) 100) (pos nutriente comboComuna)) #t] ;-- no es suficiente
+   [(eqv? (gramosFruta fruta comboGaleria ) #f) #f] ;"fruta no existe en la galeria"
+   [(> (/ (* (gramosFruta fruta comboGaleria) (aporteByFrutayNutriente fruta nutriente)) 100) (pos nutriente comboComuna)) #t] ;-- no es suficiente
    ;si es positivo, agregamos la fruta y nutriente a una lista
    ;hace algo para que muestre la fruta y el nutriente y cuanto ofrece
    ;[else (append listaDefinitiva (list fruta nutriente))]))
@@ -242,7 +242,7 @@
   (cond
     [(empty? listaFruta) "ListaFrutas vacia: esta galeria no tiene frutas para aportar a la comuna"]
     [(empty? listaNutrientes) "ListaNutrientes vacia: no hay frutas que tengan los nutrientes en esta galeria que aporten a la comuna"]
-    [(equal? (compFruta (car listaFruta) listaNutrientes comboComuna comboGaleria) #t) "se encontró por lo menos una fruta que sirva"]
+    [(equal? (compFruta (car listaFruta) listaNutrientes comboComuna comboGaleria) #f) "se encontró por lo menos una fruta que sirva"]
     [else (compListaFrutaNut (cdr listaFruta) listaNutrientes comboComuna comboGaleria)]))
 
 ;sacamos la lista de valores de carencias de la comuna seleccionada
@@ -257,7 +257,7 @@
   ;verificamos que la comuna y la galeria no esten vacias
   (cond
     [(equal? (datosComuna comboComuna) 0) "la comuna no tiene datos"]
-    [(equal? (datosGaleria comboGaleria) 0) "la comuna no tiene datos"]
+    [(equal? (datosGaleria comboGaleria) 0) "la galeria no tiene datos"]
     ;si la comuna si tiene datos
     ;obtenemos la carencias de esa comuna
     [(carencias tipoPersona comboComuna comboGaleria)]   
