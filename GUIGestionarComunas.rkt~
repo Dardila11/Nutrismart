@@ -1,5 +1,7 @@
 #lang racket
 (require racket/gui/base)
+(require "GestionarComunas.rkt")
+(require "GUIRecomendaciones.rkt")
 
 (provide comunas-frame)
 
@@ -15,28 +17,41 @@
 (define panel1 (new vertical-panel%
                     [parent comunas-frame]))
 
-(define txtPoblacionTotal (new text-field% [parent panel1][label "Población total"]))
-(define txtCantidadNinos (new text-field% [parent panel1][label "Cantidad de niños"]))
-(define txtCantidadNinosDesnu (new text-field% [parent panel1][label "Cantidad de niños con desnutrición"]))
-(define txtCantidadAncianos (new text-field% [parent panel1][label "Cantidad de ancianos"]))
-(define txtCantidadAncianosDesnu (new text-field% [parent panel1][label "Cantidad de ancianos con desnutrición"]))
-(define btnAgregarComuna(new button%
-                        [parent panel1]
-                        [enabled #t]
-                        [label "AGREGAR COMUNA"]
-                        ))
+(define comboComunas (new combo-field%
+                   [choices (list "Comuna1" "Comuna2" "Comuna3" "Comuna4")]
+                   [label "Seleccione la Comuna asignada"]
+                   [init-value "Comuna1"]
+                   (vert-margin 20)(horiz-margin 50)[min-height 10][min-width 150]
+                   [parent panel1]
+                   ))
 
-
-(define msg (new message% [parent panel1]
-                          [label "Componente Nutricional (mg)"]))
 
 (define panel2 (new vertical-panel%
-                    [alignment '(left top)]
+                    [alignment '(center top)]
                     [parent comunas-frame]))
 
-(define txtNutriente (new text-field% [parent panel2][label "Nutriente"]))
-(define txtPorcentaje (new text-field% [parent panel2][label "Porcentaje en Carencia (%)"]))
-(define txtPersonas (new text-field% [parent panel2][label "Cantidad de personas"]))
+(define msg (new message% [parent panel2]
+                          [label "Componente Nutricional (mg)"]))
+
+(define msgRes (new message% [parent panel2]
+                          [label "Resultado"]))
+
+(define comboNutrientes (new combo-field%
+                   [choices (list "Potasio" "vitaminaC" "Magnesio")]
+                   [label "Seleccione un Nutriente     "]
+                   [init-value "Potasio"]
+                   (horiz-margin 50)[min-height 10][min-width 150]
+                   [parent panel2]
+                   ))
+(define txtPorcentaje (new text-field% [parent panel2](horiz-margin 50)[min-height 10][min-width 150][label "Porcentaje en Carencia (%)"]))
+(define txtPersonas (new text-field% [parent panel2](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de personas        "]))
+(define comboPersonas (new combo-field%
+                   [choices (list "Niño" "Anciano")]
+                   [label "Seleccione un tipo              "]
+                   [init-value "Niño"]
+                   (horiz-margin 50)[min-height 10][min-width 150]
+                   [parent panel2]
+                   ))
 
 (define panel3 (new horizontal-panel%
                     [alignment '(center top)]
@@ -45,14 +60,22 @@
 (define btnAgregarNutriente(new button%
                         [parent panel3]
                         [enabled #t]
-                        [label "AGREGAR NUTRIENTE"]
-                        ))
+                        [label "AGREGAR CARENCIA"]
+                        [callback (lambda (button event)
+                                    (obtieneDatosCarencias (send comboNutrientes get-value) 
+                                                             (send txtPersonas get-value) (send comboComunas get-value) (send txtPorcentaje get-value)
+                                                             (send comboPersonas get-value)))]))
 
-(define btnEstadisticas(new button%
+(define btnEstadisticas(new button%   
                         [parent panel3]
                         [enabled #t]
-                        [label "GENERAR ESTADISTICAS"]
-                        ))
+                        [label "RECOMENDACIONES"]
+                        [callback (lambda (button event)
+                                    (send recomendaciones-frame show #t))])
+                        
+                        )
+
+                        
 
 
-;(send comunas-frame show #t)
+(send comunas-frame show #t)

@@ -44,7 +44,7 @@
                                     (insertarNutriente (send txtNutriente get-value) (send txtAporte get-value) (send txtFrutaIngresa get-value)))]))
 
 
-(send nuevaFruta-frame show #t)
+;(send nuevaFruta-frame show #t)
 
 
 

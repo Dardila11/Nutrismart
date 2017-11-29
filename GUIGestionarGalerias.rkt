@@ -67,7 +67,7 @@
                                     (send nuevaFruta-frame show #t))]))
 
 
-(send galerias-frame show #t)
+;(send galerias-frame show #t)
 
 
 

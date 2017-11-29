@@ -41,8 +41,7 @@
                         [enabled #t]
                         [label "GENERAR RECOMENDACIONES"]
                         [callback (lambda (button event)
-                                    (send msgRes set-label (resultado (send comboComunas get-value) 
-                                                             (send comboGalerias get-value))))]))
+                                    (send msgRes set-label (recomendar)))]))
                        
 
 (define msgRes (new message% [parent panel2]
@@ -50,7 +49,7 @@
                           [label "Resultado"]))
 
 
-(send recomendaciones-frame show #t)
+;(send recomendaciones-frame show #t)
 
 
 ;============================================== LOGICA ===================================================

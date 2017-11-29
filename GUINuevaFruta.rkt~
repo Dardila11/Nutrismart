@@ -1,6 +1,8 @@
 #lang racket
 (require racket/gui/base)
 
+(require "NuevaFruta.rkt")
+
 (provide nuevaFruta-frame)
 
 (define nuevaFruta-frame
@@ -13,40 +15,36 @@
                     [alignment '(center center)]
                     [parent nuevaFruta-frame]))
 
-(define txtFrutaIngresa (new text-field% [parent panel1][label "Fruta que ingresa"]))
-(define txtCantidadIngresa (new text-field% [parent panel1][label "Cantidad que ingresa (kg)"]))
-(define txtCantidadDesperdicia (new text-field% [parent panel1][label "Cantidad desperdiciada (kg)"]))
+(define txtFrutaIngresa (new text-field% [parent panel1](vert-margin 20)(horiz-margin 50)[min-height 10][min-width 150][label "Fruta que ingresa"]))
 (define btnAgregarFruta(new button%
                         [parent panel1]
                         [enabled #t]
                         [label "AGREGAR FRUTA"]
-                        ))
+                        [callback (lambda (button event)
+                                    (insertarNuevaFruta (send txtFrutaIngresa get-value)))]))
+                        
 
 
-(define panel2 (new vertical-panel%
+
+(define panel3 (new vertical-panel%
                     [alignment '(center center)]
-                    [parent nuevaFruta-frame]
-                    [min-height 1]
-                    [min-width 200]))
+                    [parent panel1]))
 
-(define msg (new message% [parent panel2]
+(define msg (new message% [parent panel3]
                           [label "Componente Nutricional (mg)"]))
 
-(define panel3 (new horizontal-panel%
-                    [alignment '(center center)]
-                    [parent nuevaFruta-frame]))
 
-
-(define txtComponente (new text-field% [parent panel3][label "Componente (mg)"]))
-(define txtNutriente (new text-field% [parent panel3][label "Nutriente"]))
+(define txtAporte (new text-field% [parent panel3](horiz-margin 50)[min-height 10][min-width 150][label "Aporte (mg)"]))
+(define txtNutriente (new text-field% [parent panel3](horiz-margin 50)[min-height 10][min-width 150][label "Nutriente"]))
 (define btnAgregar(new button%
                         [parent panel3]
                         [enabled #t]
                         [label "AGREGAR COMPONENTE"]
-                        ))
+                        [callback (lambda (button event)
+                                    (insertarNutriente (send txtNutriente get-value) (send txtAporte get-value) (send txtFrutaIngresa get-value)))]))
 
 
-;(send nuevaFruta-frame show #t)
+(send nuevaFruta-frame show #t)
 
 
 

@@ -39,6 +39,12 @@
 (define insertarCARENCIAS (prepare conn "INSERT INTO CARENCIAS(nut_id,car_numpersonas,com_id,car_porcentaje,tipo_persona) VALUES(?,?,?,?,?)"))
 
 
+;(define variable "frutas")
+;variable
+;(define variable2 (list "manzana" "mango"))
+;(~a variable2 " son " variable)
+
+
 
 
 

@@ -15,6 +15,7 @@
 (provide gramosFruta)
 (provide resultadoRecomendaciones)
 (provide resultado)
+(provide recomendar)
 
 
 
@@ -22,6 +23,15 @@
 ;al precionar el boton GENERAR RECOMENDACIONES:
 ;Se obtiene todas las carencias de la la comuna actual
 ;================================================================================================================================================================
+
+;obtenemos todas las galerias
+(define getGaleriasSQL (query-list conn "SELECT gal_nombre FROM GALERIAS"))
+(define getPersonasSQL (query-list conn "SELECT per_tipo FROM PERSONAS"))
+(define getComunasSQL (query-list conn "SELECT com_nombre FROM COMUNAS"))
+
+;tenemos que borrar todos los datos de la tabla recomendaciones
+(define borrarDatos (query-exec conn "TRUNCATE TABLE RECOMENDACIONES"))
+
 
 
 
@@ -104,6 +114,16 @@
                                                   and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = ?);"))
 (define (aporteByFrutayNutriente fruta nutriente)
   (query-value conn aporteByFrutayNutrienteSQL fruta nutriente))
+
+;insertar valores a recomendaciones
+(define insertarRecomendacionesSQL (prepare conn "INSERT INTO RECOMENDACIONES (rec_fruta, rec_nutriente, rec_comuna, rec_galeria, rec_persona)
+                                                  VALUES (?,?,?,?,?);"))
+
+(define (insertarRecomendaciones fruta nutriente comboComuna comboGaleria tipoPersona)
+  (query-exec conn insertarRecomendacionesSQL fruta nutriente comboComuna comboGaleria tipoPersona))
+
+;obtener valores de recomendaciones
+(define valoresRecomendacionesSQL (query-rows conn "SELECT * FROM RECOMENDACIONES"))
 
 
 ;================================================================================================================================================================
@@ -208,7 +228,7 @@
    [(> (/ (* (gramosFruta fruta comboGaleria) (aporteByFrutayNutriente fruta nutriente)) 100) (pos nutriente comboComuna tipoPersona))
     (cond
       ;[(write (list fruta)) #t])]
-      [(insertar-elem fruta listaDefinitiva) #t])]
+      [(insertarRecomendaciones fruta nutriente comboComuna comboGaleria tipoPersona) #t])]
    [else #f]))
 
 ;================================================================================================================================================================
@@ -238,7 +258,10 @@
     [(empty? listaNutrientes) #f]
     [(equal? nutrientesFruta '()) #f ]
     [(equal? (compNutNut (car nutrientesFruta) listaNutrientes fruta comboComuna comboGaleria tipoPersona) #f) (compFrutaNutriente (cdr nutrientesFruta) listaNutrientes fruta comboComuna comboGaleria tipoPersona)] ;no está el nutriente
-    [else (set! variableRes (mostrarFruta comboGaleria comboComuna fruta nutrientesFruta)) (compFrutaNutriente (cdr nutrientesFruta) listaNutrientes fruta comboComuna comboGaleria tipoPersona)]
+    ;Aqui se haria la insercion de datos a la tabla Recomendaciones
+    ;se tiene la fruta, nutriente, comuna, galeria, persona
+    [else (compFrutaNutriente (cdr nutrientesFruta) listaNutrientes fruta comboComuna comboGaleria tipoPersona)]
+    ;[else (set! variableRes (mostrarFruta comboGaleria comboComuna fruta nutrientesFruta)) (compFrutaNutriente (cdr nutrientesFruta) listaNutrientes fruta comboComuna comboGaleria tipoPersona)]
     ))
 
 
@@ -247,23 +270,18 @@
 ;================================================================================================================================================================
 
 ;compara UNA SOLA fruta de la lista FRUTAS con la lista Carencias
-
 (define (compFruta fruta listaNutrientes comboComuna comboGaleria tipoPersona)
   (cond
     [(empty? listaNutrientes) #f]
     [(equal? (compFrutaNutriente (nutrienteByFruta fruta) listaNutrientes fruta comboComuna comboGaleria tipoPersona) #t) #t] ; hay unafruta correcta
     [else #f]))
 
-
-;(nutrienteByFruta "banano")
-
-;(compFruta "naranja" (nombreCarenciaComunas "niño" "comuna1"))
 ;================================================================================================================================================================
 ;compara una lista de frutas con la lista de nutrientes
 (define (compListaFrutaNut listaFruta listaNutrientes comboComuna comboGaleria tipoPersona)
   (cond
-    [(empty? listaFruta) variableRes ] ;"ListaFrutas vacia: esta galeria no tiene frutas para aportar a la comuna"]
-    [(empty? listaNutrientes) "ListaNutrientes vacia: no hay frutas que tengan los nutrientes en esta galeria que aporten a la comuna"]
+    [(empty? listaFruta) #t ] ;variableRes ] ;"ListaFrutas vacia: esta galeria no tiene frutas para aportar a la comuna"]
+    [(empty? listaNutrientes) #t] ; "ListaNutrientes vacia: no hay frutas que tengan los nutrientes en esta galeria que aporten a la comuna"]
     [(equal? (compFruta (car listaFruta) listaNutrientes comboComuna comboGaleria tipoPersona) #t) "se encontró por lo menos una fruta que sirva"]
     [else (compListaFrutaNut (cdr listaFruta) listaNutrientes comboComuna comboGaleria tipoPersona)]))
 
@@ -277,8 +295,8 @@
 (define (resultadoRecomendaciones tipoPersona comboComuna comboGaleria )
   ;verificamos que la comuna y la galeria no esten vacias
   (cond
-    [(equal? (datosComuna comboComuna) 0) "la comuna no tiene datos"]
-    [(equal? (datosGaleria comboGaleria) 0) "la galeria no tiene datos"]
+    [(equal? (datosComuna comboComuna) 0) #t ];"la comuna no tiene datos"]
+    [(equal? (datosGaleria comboGaleria) 0) #t ];"la galeria no tiene datos"]
     ;si la comuna si tiene datos
     ;obtenemos la carencias de esa comuna
     [(carencias tipoPersona comboComuna comboGaleria)]
@@ -286,18 +304,38 @@
 
 
 (define (resultado comboComuna comboGaleria)
-  (resultadoRecomendaciones "niño" comboComuna comboGaleria))
+  (cond
+    [(equal? (resultadoRecomendaciones "anciano" comboComuna comboGaleria) (resultadoRecomendaciones "niño" comboComuna comboGaleria)) #t]))
+;================================================================================================================================================================
 
-(resultadoRecomendaciones "niño" "comuna1" "bolivar")
+;recorre SOLO una COMUNA en la LISTA de GALERIAS
+(define (recComunaListaGalerias comuna listaGaleria)
+  (cond
+    [(empty? listaGaleria) #t]
+    [else (eqv? (resultado comuna (car listaGaleria)) #t) (recComunaListaGalerias comuna (cdr listaGaleria))]))
+
+;recorre LISTA DE COMUNA en
+(define (recListaComunaListaGaleria listaComuna listaGaleria)
+  (cond
+    [(empty? listaComuna) "ya no hay mas comunas"]
+    ;esta comprueba solo una comuna en la lista de galerias
+    [else (eqv? (recComunaListaGalerias (car listaComuna) listaGaleria) #t) (recListaComunaListaGaleria (cdr listaComuna) listaGaleria)]))
+    ;corta la cabeza y sigue con el resto de la lista
+    ;[else (recListaComunaListaGaleria (cdr listaComuna) listaGaleria)]))
+
+;(recListaComunaListaGaleria getComunasSQL getGaleriasSQL)
 
 
-(define variable "frutas")
-variable
-(define variable2 (list "manzana" "mango"))
-(~a variable2 " son " variable)
+
+(define (recomendar)
+  (recListaComunaListaGaleria getComunasSQL getGaleriasSQL)
+  ;mostramos las recomendaciones
+  (car (query-rows conn "select * from recomendaciones"))
+  )
+
+(recomendar)
 
   
- 
  
 ;================================================================================================================================================================
 
