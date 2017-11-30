@@ -2,6 +2,7 @@
 (require racket/gui/base)
 
 (require "NuevaFruta.rkt")
+(require "Recomendaciones.rkt")
 
 (provide nuevaFruta-frame)
 
@@ -21,7 +22,9 @@
                         [enabled #t]
                         [label "AGREGAR FRUTA"]
                         [callback (lambda (button event)
-                                    (insertarNuevaFruta (send txtFrutaIngresa get-value)))]))
+                                    (send msgRes set-label (insertarNuevaFruta (send txtFrutaIngresa get-value))))]))
+
+(define msgRes (new message% [parent panel1][label "Resultado"][min-height 1][min-width 400]))
                         
 
 
@@ -33,18 +36,39 @@
 (define msg (new message% [parent panel3]
                           [label "Componente Nutricional (mg)"]))
 
-
+(define txtNutriente (new combo-field%
+                   [choices getNutrientesSQL]
+                   [label "Nutriente"]               
+                   (horiz-margin 50)[min-height 10][min-width 150]
+                   [parent panel3]
+                   ))
 (define txtAporte (new text-field% [parent panel3](horiz-margin 50)[min-height 10][min-width 150][label "Aporte (mg)"]))
-(define txtNutriente (new text-field% [parent panel3](horiz-margin 50)[min-height 10][min-width 150][label "Nutriente"]))
+;(define txtNutriente (new text-field% [parent panel3](horiz-margin 50)[min-height 10][min-width 150][label "Nutriente"]))
 (define btnAgregar(new button%
                         [parent panel3]
                         [enabled #t]
                         [label "AGREGAR COMPONENTE"]
                         [callback (lambda (button event)
-                                    (insertarNutriente (send txtNutriente get-value) (send txtAporte get-value) (send txtFrutaIngresa get-value)))]))
+                                    (send msgResNut set-label (insertarNutriente (send txtNutriente get-value) (send txtAporte get-value) (send txtFrutaIngresa get-value))))]))
+
+(define msgResNut (new message% [parent panel3]
+                          [min-height 1][min-width 400]
+                          [label "Resultado"]))
+
+(define panel4 (new vertical-panel%
+                    [alignment '(center center)]
+                    [parent panel1]))
+
+(define btnVolver(new button%
+                        [parent panel4]
+                        [enabled #t]
+                        [label "VOLVER"]
+                        [callback (lambda (button event)
+                                   (send nuevaFruta-frame show #f))]))
 
 
-(send nuevaFruta-frame show #t)
+
+;(send nuevaFruta-frame show #t)
 
 
 

@@ -12,9 +12,8 @@
    3. Insertarmos los datos obtenidos a la Tabla DATOSGAL. |#
 
 (define (obtieneDatosIngresados comboGaleria comboFruta txtCantidadIngresa txtCantidaDesperdicia)
-  ;realizamos la consulta para obtener el id de la galeria
-    ;(format "~v" (query-value conn galeriaIdByName comboGaleria)))
-  (query-exec conn insertarDATOSGAL (query-value conn galeriaIdByName comboGaleria) (query-value conn frutaIdByName comboFruta) txtCantidadIngresa txtCantidaDesperdicia))
+  (query-exec conn insertarDATOSGAL (query-value conn galeriaIdByName comboGaleria)
+              (query-value conn frutaIdByName comboFruta) txtCantidadIngresa txtCantidaDesperdicia) "Guardado correctamente" )
 
 
 
@@ -28,7 +27,7 @@
 
 ;insertar datos en la tabla DATOSGAL
 (define insertarDATOSGAL (prepare conn "INSERT INTO DATOSGAL(gal_id,fru_id,dat_ingresa,dat_desperdicia) VALUES(?,?,?,?)"))
-;(query-exec conn insertarDATOSGAL (query-value conn galeriaIdByName "Bolivar") (query-value conn frutaIdByName "Banano") "20" "40")
+
 
 
 

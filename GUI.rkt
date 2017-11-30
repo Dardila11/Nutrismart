@@ -3,13 +3,7 @@
 (require db)
 (require "GUIGestionarGalerias.rkt")
 (require "GUIGestionarComunas.rkt")
-
-;conexion a la bd
-(define conn (mysql-connect #:user "dardila"
-               #:database "db_nutrismart"
-               #:password "dardila12345"))
-
-;Ingreso a nutrismart
+(require "Conexion.rkt")
 
 #| Se conecta a la bd de MySQL
    Necesita el email y contraseña para poder ingresar a la aplicacion |#
@@ -44,6 +38,7 @@
                     [alignment '(center center)]
                     [parent application-frame]))
 
+;button galerias y comunas
 (define btnGalerias(new button%
                         [parent panel2]
                         [enabled #f]
@@ -58,32 +53,22 @@
                                     (send comunas-frame show #t))
                                    ]))
 
+(define consultaSQL1 (prepare conn "SELECT * FROM USERS WHERE usu_email = ? and usu_pass = ?"))
+
 
 (define (consultaLogin conn email pass)
   (cond
     [(eqv? email "") "campo email vacio"]
     [(eqv? pass "")  "campo constraseña vacio"]
     [(cond
-       [(query-maybe-row conn consultaSQL1 email pass) (send btnGalerias enable #t) (send btnComunas enable #t) "Ingreso Correcto"])]
-       ;[(empty? (consultaSQL conn email pass)) "Usuario Incorrecto"]
-       ;si no está vacio, significa que el usuario existe y activa los botones Galeria y Comunas
-       ;[(empty? (query-rows conn "SELECT * FROM USERS WHERE usu_email = '$1' and usu_pass = '$2'")) "Usuario Incorrecto"]
-       [(boolean? (query-maybe-row conn consultaSQL1 email pass)) "Usuario no existe"]))
+       [(not (equal? (query-maybe-row conn consultaSQL1 email pass) #f)) (send btnGalerias enable #t) (send btnComunas enable #t) "Ingreso Correcto"]
+       [else (equal? (query-maybe-row conn consultaSQL1 email pass) #f) "Usuario no existe"])]))
 
-;(define (consultaSQL conn usu_email ) (prepare conn "SELECT * FROM USERS WHERE usu_pass = ?"))
-
-(define consultaSQL1 (prepare conn "SELECT * FROM USERS WHERE usu_email = ? and usu_pass = ?"))
 
 (query-maybe-row conn consultaSQL1 "dan@hotmail.com" "dan12345")
-
-;(consultaSQL conn "dan@hotmail.com")
-
-;(query-row conn "SELECT * FROM USERS WHERE usu_email = 'dan@hotmail.com'")
                                               
 (send application-frame show #t)
 
-;[(query-rows conn "SELECT * FROM USERS WHERE usu_email = '$1' and usu_pass = '$2'") (send btnGalerias enable #t) (send btnComunas enable #t) "Ingreso Correcto"]
- ;   ))
 
 
 

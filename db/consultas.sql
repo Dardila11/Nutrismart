@@ -49,7 +49,7 @@ SELECT * FROM DATOSGAL;
 SELECT * FROM GALERIAS;
 SELECT * FROM COMUNAS;
 SELECT * FROM DATOSCOM;
-ALTER TABLE REFERENCIAS AUTO_INCREMENT=1;
+ALTER TABLE RECOMENDACIONES AUTO_INCREMENT=1;
 
 
 SELECT * FROM NUTRIENTES;
@@ -112,7 +112,7 @@ WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'anciano'
 SELECT (SELECT nut_nombre FROM NUTRIENTES WHERE nut_id =  car.nut_id )
 FROM CARENCIAS as car 
 INNER JOIN REFERENCIAS as ref on ref.per_id = car.tipo_persona and ref.nut_id = car.nut_id
-WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'anciano') 
+WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'niño') 
 			 and car.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna1');
 
              
@@ -140,6 +140,13 @@ FROM DATOSGAL as datg INNER JOIN FRUTAS fru
 ON datg.fru_id = fru.fru_id
 WHERE datg.gal_id = 2;
 
+-- Obtiene las frutas que se encuentran en la galeria por nombre
+
+SELECT  fru.fru_nombre
+FROM DATOSGAL as datg INNER JOIN FRUTAS fru
+ON datg.fru_id = fru.fru_id
+WHERE datg.gal_id = (SELECT gal_id FROM GALERIAS WHERE gal_nombre = 'bolivar');
+
 -- Obtiene los nutrientes de las frutas de la galeria 2
 SELECT nut.nut_nombre
 FROM DATOSNUT as datn
@@ -152,86 +159,47 @@ WHERE datg.gal_id = 2;
 SELECT nut.nut_nombre
 FROM DATOSNUT as datn
 INNER JOIN NUTRIENTES as nut ON datn.nut_id = nut.nut_id
-WHERE datn.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'manzana');
+WHERE datn.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano');
 
 -- Obtiene aporte de la naranja con el nutriente magnesio
 SELECT datn.nut_aporte
 FROM DATOSNUT as datn
 INNER JOIN FRUTAS as fru ON datn.fru_id = fru.fru_id
 WHERE fru.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano') 
-and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'potasio');
+and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'magnesio');
 
 -- obtiene los gramos que ingresan de una fruta especifica
 
 SELECT datg.dat_ingresa
 FROM DATOSGAL as datg
-WHERE datg.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano');
+WHERE datg.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano')
+and datg.gal_id = (SELECT gal_id FROM GALERIAS WHERE gal_nombre = 'bolivar');
 
 -- obtiene la referencia para un tipo de persona y un nutriente
 
 SELECT ref.ref_referencia
 FROM REFERENCIAS ref
-WHERE ref.per_id = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'niño')
+WHERE ref.per_id = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'anciano')
 and ref.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'potasio');
 
+-- obtiene las frutas de la galeria por nombre
+SELECT  fru.fru_nombre
+FROM DATOSGAL as datg INNER JOIN FRUTAS fru
+ON datg.fru_id = fru.fru_id
+WHERE datg.gal_id = (SELECT gal_id FROM GALERIAS WHERE gal_nombre = 'bolivar');
+
+SELECT COUNT(*)
+FROM DATOSCOM
+WHERE com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna2');
+
+SELECT COUNT(*)
+FROM DATOSGAL
+WHERE gal_id = (SELECT gal_id FROM GALERIAS WHERE gal_nombre = 'esmeralda');
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-		
-
-
-
-
-
-								
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+INSERT INTO RECOMENDACIONES (rec_fruta, rec_nutriente, rec_comuna, rec_galeria, rec_persona)
+VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
 
 
 

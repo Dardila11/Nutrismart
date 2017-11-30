@@ -7,6 +7,7 @@
 (provide obtieneDatosCarencias)
 
 
+
 ;Ingresar datos a comuna
 ;Obtener id de la comuna
 (define comunaIdByName (prepare conn "SELECT com_id FROM COMUNAS WHERE com_nombre = ?"))
@@ -14,7 +15,7 @@
 
 (define (obtieneDatosComuna comboComunas txtPoblacion txtCantNinos txtCantNinosDes txtCantAncianos txtCantAncianosDes)
     ;(format "~v" (query-value conn galeriaIdByName comboGaleria)))
-  (query-exec conn insertarDATOSCOM (query-value conn comunaIdByName comboComunas) txtPoblacion txtCantNinos txtCantNinosDes txtCantAncianos txtCantAncianosDes))
+  (query-exec conn insertarDATOSCOM (query-value conn comunaIdByName comboComunas) txtPoblacion txtCantNinos txtCantNinosDes txtCantAncianos txtCantAncianosDes) "Ingresado Correctamente")
 
 ;insertar datos en la tabla DATOSCOM
 (define insertarDATOSCOM (prepare conn "INSERT INTO DATOSCOM(com_id,com_cantidad_total,com_cant_ninos,com_cant_ninosdes,
@@ -30,13 +31,14 @@
 (define (obtieneDatosCarencias txtNombreNutriente txtCantPersonas comboComunas txtPorcentaje comboPersonas)
     ;(format "~v" (query-value conn galeriaIdByName comboGaleria)))
   (query-exec conn insertarCARENCIAS (query-value conn nutrienteIdByName txtNombreNutriente) txtCantPersonas
-              (query-value conn comunaIdByName comboComunas) txtPorcentaje (query-value conn personaIdByName comboPersonas)))
+              (query-value conn comunaIdByName comboComunas) txtPorcentaje (query-value conn personaIdByName comboPersonas)) "Carencias guardadas correctamente")
 
 ;Obtenemos el id de la persona seleccionado en el comboBox
 (define personaIdByName (prepare conn "SELECT per_id FROM PERSONAS WHERE per_tipo = ?"))
 
 ;insertar datos en la tabla CARENCIAS
 (define insertarCARENCIAS (prepare conn "INSERT INTO CARENCIAS(nut_id,car_numpersonas,com_id,car_porcentaje,tipo_persona) VALUES(?,?,?,?,?)"))
+
 
 
 

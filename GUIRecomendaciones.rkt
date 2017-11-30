@@ -41,16 +41,15 @@
                         [enabled #t]
                         [label "GENERAR RECOMENDACIONES"]
                         [callback (lambda (button event)
-                                    (resultadoRecomendaciones "niño" (send comboComunas get-value) 
-                                                             (send comboGalerias get-value)))]))
+                                    (send msgRes set-label (recomendar)))]))
                        
 
 (define msgRes (new message% [parent panel2]
-                          [min-height 1][min-width 200]
+                          [min-height 10][min-width 800]
                           [label "Resultado"]))
 
 
-(send recomendaciones-frame show #t)
+;(send recomendaciones-frame show #t)
 
 
 ;============================================== LOGICA ===================================================

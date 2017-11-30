@@ -2,6 +2,9 @@
 (require racket/gui/base)
 (require "GestionarComunas.rkt")
 (require "GUIRecomendaciones.rkt")
+(require "Conexion.rkt")
+(provide recomendaciones-frame)
+(require "Recomendaciones.rkt")
 
 (provide comunas-frame)
 
@@ -18,12 +21,31 @@
                     [parent comunas-frame]))
 
 (define comboComunas (new combo-field%
-                   [choices (list "Comuna1" "Comuna2" "Comuna3" "Comuna4")]
-                   [label "Seleccione la Comuna asignada"]
-                   [init-value "Comuna1"]
+                   [choices getComunasSQL]
+                   [label "Seleccione la Comuna"]
+                   
                    (vert-margin 20)(horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel1]
                    ))
+
+(define txtPoblacionTotal (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Población total"]))
+(define txtCantidadNinos (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de niños"]))
+(define txtCantidadNinosDesnu (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de niños con desnutrición"]))
+(define txtCantidadAncianos (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de ancianos"]))
+(define txtCantidadAncianosDesnu (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad de ancianos con desnutrición"]))
+
+;TODO 1: AGREGAR MENSAJES DE GUARDADO 
+(define btnAgregarComuna(new button%
+                        [parent panel1]
+                        [enabled #t]
+                        [label "AGREGAR COMUNA"]
+                        [callback (lambda (button event)
+                                    (send msgRes set-label (obtieneDatosComuna (send comboComunas get-value) (send txtPoblacionTotal get-value)
+                                                             (send txtCantidadNinos get-value) (send txtCantidadNinosDesnu get-value)
+                                                             (send txtCantidadAncianos get-value) (send txtCantidadAncianosDesnu get-value))))]))
+(define msgRes (new message% [parent panel1]
+                          [min-height 1][min-width 400]
+                          [label "Resultado"]))
 
 
 (define panel2 (new vertical-panel%
@@ -33,13 +55,10 @@
 (define msg (new message% [parent panel2]
                           [label "Componente Nutricional (mg)"]))
 
-(define msgRes (new message% [parent panel2]
-                          [label "Resultado"]))
 
 (define comboNutrientes (new combo-field%
-                   [choices (list "Potasio" "vitaminaC" "Magnesio")]
+                   [choices getNutrientesSQL]
                    [label "Seleccione un Nutriente     "]
-                   [init-value "Potasio"]
                    (horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel2]
                    ))
@@ -62,20 +81,28 @@
                         [enabled #t]
                         [label "AGREGAR CARENCIA"]
                         [callback (lambda (button event)
-                                    (obtieneDatosCarencias (send comboNutrientes get-value) 
+                                    (send msgResRec set-label (obtieneDatosCarencias (send comboNutrientes get-value) 
                                                              (send txtPersonas get-value) (send comboComunas get-value) (send txtPorcentaje get-value)
-                                                             (send comboPersonas get-value)))]))
+                                                             (send comboPersonas get-value))))]))
 
 (define btnEstadisticas(new button%   
                         [parent panel3]
                         [enabled #t]
                         [label "RECOMENDACIONES"]
                         [callback (lambda (button event)
-                                    (send recomendaciones-frame show #t))])
+                                    (send msgResRec set-label (recomendar)))]))
+(define panel4 (new horizontal-panel%
+                    [alignment '(center top)]
+                    [parent comunas-frame]))
+
+(define msgResRec (new message% [parent panel4]
+                          [min-height 1][min-width 400]
+                          [label "Resultado Recomendaciones"]))
+
+                       
                         
-                        )
 
                         
 
 
-(send comunas-frame show #t)
+;(send comunas-frame show #t)
