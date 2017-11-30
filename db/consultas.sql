@@ -201,8 +201,14 @@ WHERE gal_id = (SELECT gal_id FROM GALERIAS WHERE gal_nombre = 'esmeralda');
 INSERT INTO RECOMENDACIONES (rec_fruta, rec_nutriente, rec_comuna, rec_galeria, rec_persona)
 VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
 
+-- porcentaje de datos por comuna -niños
+SELECT (datc.com_cant_ninosdes / datc.com_cant_ninos) * 100 as porcentaje
+FROM DATOSCOM as datc
+WHERE datc.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna3');
 
-
--- tienes la comuna y el tipo de peronsa, obten el porcentaje de personas que sufren de desnutricion
+-- porcentaje de datos por comuna -ancianos
+SELECT (datc.com_cant_ancianosdes / datc.com_cant_ancianos) * 100 as porcentaje
+FROM DATOSCOM as datc
+WHERE datc.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna3');
 
 

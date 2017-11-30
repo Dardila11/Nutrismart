@@ -35,6 +35,22 @@
 (define getFrutasSQL (query-list conn "SELECT fru_nombre FROM FRUTAS"))
 (define getNutrientesSQL (query-list conn "SELECT nut_nombre FROM NUTRIENTES"))
 
+;porcentaje de personas con desnutricion (niños)
+(define ninosPorcentajeSQL (prepare conn "SELECT (datc.com_cant_ninosdes / datc.com_cant_ninos) * 100 as porcentaje
+                                                  FROM DATOSCOM as datc
+                                                  WHERE datc.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = ?);"))
+
+(define (ninosPorcentaje comboComuna)
+ (query-value conn ninosPorcentajeSQL comboComuna))
+
+;porcentaje de personas con desnutricion (ancianos)
+
+(define ancianosPorcentajeSQL (prepare conn "SELECT (datc.com_cant_ancianosdes / datc.com_cant_ancianos) * 100 as porcentaje
+                                             FROM DATOSCOM as datc
+                                             WHERE datc.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = ?);"))
+(define (ancianosPorcentaje comboComuna)
+  (query-value conn ancianosPorcentajeSQL comboComuna))
+  
 ;tenemos que borrar todos los datos de la tabla recomendaciones
 (define borrarDatos (query-exec conn "TRUNCATE TABLE RECOMENDACIONES"))
 
@@ -215,6 +231,7 @@
 (define (mostrarFruta comboGaleria comboComuna fruta listaNutrientes)
     (~a "La galeria " comboGaleria " posee la fruta " fruta " la cual tiene los nutrientes " listaNutrientes " los cuales son necesario para la comuna " comboComuna))
 
+
 ;================================================================================================================================================================
 
 
@@ -332,25 +349,30 @@
   (~a "La galeria " (fifth datos) " tiene la fruta " (second datos) " la cual tiene el nutriente "
    (third datos) " suficiente para alimentar a los " (sixth datos) "s de la comuna " (fourth datos)))
 
+(define ( mostrarDatos1 datos)
+  (cond
+  [(equal? (sixth datos) "niño") (~a "para la comuna " (fourth datos) " se detecta que un " (exact->inexact(ninosPorcentaje (fourth datos)))
+                                     "% de niños tienen desnutricion. La galeria " (fifth datos) " ofrece la fruta " (second datos) " la cual tiene el nutriente "
+                                  (third datos) " suficiente para alimentar a los " (sixth datos) "s de esta comuna")]
+  [else (~a "para la comuna " (fourth datos) " se detecta que un " (exact->inexact(ancianosPorcentaje (fourth datos)))
+                                     "% de ancianos tienen desnutricion. La galeria " (fifth datos) " ofrece la fruta " (second datos) " la cual tiene el nutriente "
+                                  (third datos) " suficiente para alimentar a los " (sixth datos) "s de esta comuna")]))
 
-(define abrirArchivo out)
-
-
+  
 
 (define (recomendar)
-  abrirArchivo
   (recListaComunaListaGaleria getComunasSQL getGaleriasSQL)
   ;mostramos las recomendaciones
   (cond
-   [(recursivoDatos (query-rows conn "select * from recomendaciones")) (close-output-port out) "se han guardado todos los datos"]))
+   [ out (recursivoDatos (query-rows conn "select * from recomendaciones")) (close-output-port out) "se han guardado todos los datos"]))
 
 
 (define (recursivoDatos  listaVector)
   (cond
     [(eqv? listaVector '())]
-    [else (writeln (mostrarDatos (vector->list(car listaVector)))  out) (recursivoDatos (cdr listaVector))]))
+    [else (writeln (mostrarDatos1 (vector->list(car listaVector)))  out) (writeln "---" out) (recursivoDatos (cdr listaVector))]))
 
-;(recomendar)
+(recomendar)
 
 
 

@@ -65,7 +65,7 @@
        [else (equal? (query-maybe-row conn consultaSQL1 email pass) #f) "Usuario no existe"])]))
 
 
-(query-maybe-row conn consultaSQL1 "dan@hotmail.com" "dan12345")
+;(query-maybe-row conn consultaSQL1 "dan@hotmail.com" "dan12345")
                                               
 (send application-frame show #t)
 
