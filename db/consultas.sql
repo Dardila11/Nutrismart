@@ -49,7 +49,7 @@ SELECT * FROM DATOSGAL;
 SELECT * FROM GALERIAS;
 SELECT * FROM COMUNAS;
 SELECT * FROM DATOSCOM;
-ALTER TABLE RECOMENDACIONES AUTO_INCREMENT=1;
+ALTER TABLE DATOSGAL AUTO_INCREMENT=1;
 
 
 SELECT * FROM NUTRIENTES;
@@ -112,7 +112,7 @@ WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'anciano'
 SELECT (SELECT nut_nombre FROM NUTRIENTES WHERE nut_id =  car.nut_id )
 FROM CARENCIAS as car 
 INNER JOIN REFERENCIAS as ref on ref.per_id = car.tipo_persona and ref.nut_id = car.nut_id
-WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'niño') 
+WHERE car.tipo_persona = (SELECT per_id FROM PERSONAS WHERE per_tipo = 'anciano') 
 			 and car.com_id = (SELECT com_id FROM COMUNAS WHERE com_nombre = 'comuna1');
 
              
@@ -159,20 +159,20 @@ WHERE datg.gal_id = 2;
 SELECT nut.nut_nombre
 FROM DATOSNUT as datn
 INNER JOIN NUTRIENTES as nut ON datn.nut_id = nut.nut_id
-WHERE datn.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano');
+WHERE datn.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'manzana');
 
--- Obtiene aporte de la naranja con el nutriente magnesio
+-- Obtiene aporte de la fruta con el nutriente 
 SELECT datn.nut_aporte
 FROM DATOSNUT as datn
 INNER JOIN FRUTAS as fru ON datn.fru_id = fru.fru_id
-WHERE fru.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano') 
-and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'magnesio');
+WHERE fru.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'manzana') 
+and datn.nut_id = (SELECT nut_id FROM NUTRIENTES WHERE nut_nombre = 'vitaminaC');
 
 -- obtiene los gramos que ingresan de una fruta especifica
 
 SELECT datg.dat_ingresa
 FROM DATOSGAL as datg
-WHERE datg.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'banano')
+WHERE datg.fru_id = (SELECT fru_id FROM FRUTAS WHERE fru_nombre = 'manzana')
 and datg.gal_id = (SELECT gal_id FROM GALERIAS WHERE gal_nombre = 'bolivar');
 
 -- obtiene la referencia para un tipo de persona y un nutriente
@@ -203,5 +203,6 @@ VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway
 
 
 
+-- tienes la comuna y el tipo de peronsa, obten el porcentaje de personas que sufren de desnutricion
 
 

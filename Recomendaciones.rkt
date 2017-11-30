@@ -326,7 +326,6 @@
 
 (define out (open-output-file #:exists 'truncate "recomendaciones.txt"))
 ;(write "holaa\n" out)
-(define in (open-input-file "recomendaciones.txt"))
 
 
 (define ( mostrarDatos datos)
@@ -334,19 +333,25 @@
    (third datos) " suficiente para alimentar a los " (sixth datos) "s de la comuna " (fourth datos)))
 
 
+(define abrirArchivo out)
+
+
+
+(define (recomendar)
+  abrirArchivo
+  (recListaComunaListaGaleria getComunasSQL getGaleriasSQL)
+  ;mostramos las recomendaciones
+  (cond
+   [(recursivoDatos (query-rows conn "select * from recomendaciones")) (close-output-port out) "se han guardado todos los datos"]))
+
 
 (define (recursivoDatos  listaVector)
   (cond
     [(eqv? listaVector '())]
     [else (writeln (mostrarDatos (vector->list(car listaVector)))  out) (recursivoDatos (cdr listaVector))]))
 
-(define (recomendar) 
-  (recListaComunaListaGaleria getComunasSQL getGaleriasSQL)
-  ;mostramos las recomendaciones
-  (cond
-   [(recursivoDatos (query-rows conn "select * from recomendaciones")) (close-output-port out) "se han guardado todos los datos"]))
-
 ;(recomendar)
+
 
 
 
