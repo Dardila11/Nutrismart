@@ -4,6 +4,8 @@
 (provide galerias-frame)
 (require "GUINuevaFruta.rkt")
 (require "GestionarGalerias.rkt")
+(require "Recomendaciones.rkt")
+
 
 (define galerias-frame
   (new frame%
@@ -11,13 +13,10 @@
     [width 600]
     [height 400]))
 
-;TODO 1. Construir todo (incluyendo los GUI para las frutas) el GUI para gestionar Galerias
-;     2. FECHA LIMITE MARTES 21 12:00
 
 (define comboGalerias (new combo-field%
-                   [choices (list "Bolivar" "Esmeralda")]
-                   [label "Seleccione la galeria asignada"]
-                   [init-value "Bolivar"]
+                   [choices getGaleriasSQL]
+                   [label "Seleccione la galeria asignada"]               
                    (vert-margin 20)(horiz-margin 50)[min-height 10][min-width 150]
                    [parent galerias-frame]
                    ))
@@ -28,8 +27,7 @@
 
 
 (define comboFrutas (new combo-field%
-                   [choices (list "Banano" "Papaya" "Manzana" "Naranja")]
-                   [init-value "Banano"]
+                   [choices getFrutasSQL]         
                    [label "Seleccione la fruta"]
                    (horiz-margin 50)[min-height 10][min-width 150]
                    [parent panel1]
@@ -37,7 +35,6 @@
 
 
 ;Cajas de texto
-
 (define txtCantidadIngresa (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad que ingresa (g)"]))
 (define txtCantidadDesperdicia (new text-field% [parent panel1](horiz-margin 50)[min-height 10][min-width 150][label "Cantidad desperdiciada (g)"]))
 
@@ -67,7 +64,7 @@
                                     (send nuevaFruta-frame show #t))]))
 
 
-;(send galerias-frame show #t)
+(send galerias-frame show #t)
 
 
 

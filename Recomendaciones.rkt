@@ -16,6 +16,7 @@
 (provide resultadoRecomendaciones)
 (provide resultado)
 (provide recomendar)
+(provide getGaleriasSQL getFrutasSQL)
 
 
 
@@ -28,6 +29,7 @@
 (define getGaleriasSQL (query-list conn "SELECT gal_nombre FROM GALERIAS"))
 (define getPersonasSQL (query-list conn "SELECT per_tipo FROM PERSONAS"))
 (define getComunasSQL (query-list conn "SELECT com_nombre FROM COMUNAS"))
+(define getFrutasSQL (query-list conn "SELECT fru_nombre FROM FRUTAS"))
 
 ;tenemos que borrar todos los datos de la tabla recomendaciones
 (define borrarDatos (query-exec conn "TRUNCATE TABLE RECOMENDACIONES"))
@@ -326,14 +328,63 @@
 ;(recListaComunaListaGaleria getComunasSQL getGaleriasSQL)
 
 
+(define (exportarDatos lista)
+  (cond
+    ;recorremos toda la lista de datos
+    [(empty? lista) "ya se leyó toda la lista"]
+    ;hacemos lo requerido para cada fila
+    [(exportarDatos (car lista))]
+    ;seguimos con lo que queda de la lista
+    [else (exportarDatos (cdr lista))]))
 
-(define (recomendar)
+
+(define out (open-output-file #:exists 'truncate "recomendaciones.txt"))
+;(write "holaa\n" out)
+(define in (open-input-file "recomendaciones.txt"))
+
+
+(define ( mostrarDatos datos)
+;(writeln (~a "La galeria " (fifth datos) " tiene la fruta " (second datos) " la cual tiene el nutriente "
+ ;   (third datos) " suficiente para alimentar a los " (sixth datos) "s de la comuna " (fourth datos))))
+  (~a "La galeria " (fifth datos) " tiene la fruta " (second datos) " la cual tiene el nutriente "
+   (third datos) " suficiente para alimentar a los " (sixth datos) "s de la comuna " (fourth datos)))
+
+
+
+(define (recursivoDatos  listaVector)
+  (cond
+    [(eqv? listaVector '())]
+    [else (writeln (mostrarDatos (vector->list(car listaVector)))  out) (recursivoDatos (cdr listaVector))]))
+
+(define (recomendar) 
   (recListaComunaListaGaleria getComunasSQL getGaleriasSQL)
   ;mostramos las recomendaciones
-  (car (query-rows conn "select * from recomendaciones"))
-  )
+  (cond
+   [(recursivoDatos (query-rows conn "select * from recomendaciones")) (close-output-port out) "se han guardado todos los datos"]))
 
-(recomendar)
+
+
+
+
+;(recomendar)
+
+
+
+;ahora queremos mostrar toda la lista de datos de la misma manera
+
+
+
+;(recursivoDatos (query-rows conn "select * from recomendaciones"))
+
+
+
+;(~a "la galeria " (fifth datos) " tiene la fruta " (second datos) " la cual tiene el nutriente "
+;    (third datos) " suficiente para alimentar a los " (sixth datos) "s de la comuna " (fourth datos) )
+
+
+
+
+
 
   
  
